@@ -1,6 +1,6 @@
 // Variables globales
 let userTable = [];
-const API_URL = 'http://localhost:3000/api/entries';
+const API_URL = '/api/entries';
 
 // Initialisation
 document.addEventListener('DOMContentLoaded', () => {
