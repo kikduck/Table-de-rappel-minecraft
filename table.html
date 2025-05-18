@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de la Table - Minecraft</title>
+    <link rel="stylesheet" href="Library/icons-minecraft-215.css">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Gestion de la Table de Rappel</h1>
+        <nav class="navigation">
+            <a href="index.html" class="nav-btn">Retour au Jeu</a>
+        </nav>
+
+        <div class="table-management">
+            <form id="add-entry-form">
+                <div class="form-group">
+                    <label for="search-item">Rechercher un objet:</label>
+                    <input type="text" id="search-item" placeholder="Tapez pour rechercher...">
+                </div>
+                <div class="form-group icon-selection">
+                    <div class="icon-select-container">
+                        <label for="item-icon">Icône de l'objet:</label>
+                        <select id="item-icon" required>
+                            <option value="">Sélectionnez un objet</option>
+                            <!-- Les options seront remplies dynamiquement -->
+                        </select>
+                    </div>
+                    <div id="icon-preview" class="icon-preview"></div>
+                </div>
+                <div class="form-group">
+                    <label for="item-number">Numéro:</label>
+                    <input type="number" id="item-number" min="0" max="99" required>
+                </div>
+                <button type="submit">Ajouter l'entrée</button>
+            </form>
+
+            <div class="entries-list">
+                <h2>Entrées actuelles</h2>
+                <table id="entries-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Objet</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Les entrées seront ajoutées dynamiquement -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="scripts/table.js"></script>
+</body>
+
+</html>

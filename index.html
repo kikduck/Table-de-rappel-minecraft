@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table de Rappel Minecraft</title>
+    <link rel="stylesheet" href="Library/icons-minecraft-215.css">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Table de Rappel Minecraft</h1>
+        <nav class="navigation">
+            <a href="table.html" class="nav-btn">Gérer la Table</a>
+        </nav>
+        <div class="mode-selector">
+            <button class="mode-btn active" data-mode="image-to-number">Image vers Nombre</button>
+            <button class="mode-btn" data-mode="number-to-image">Nombre vers Image</button>
+        </div>
+        <div class="game-container">
+            <div id="item-result-container">
+                <span id="item-result"></span>
+            </div>
+            <div id="image-to-number" class="game-mode active">
+                <div class="item-display"><i class="icon-minecraft icon-minecraft-diamond-sword"></i></div>
+                <div class="input-container">
+                    <input type="number" id="number-input" min="0" max="49" placeholder="Entrez le nombre">
+                    <button id="check-answer">Vérifier</button>
+                </div>
+                <div class="score-display">Score: <span id="score">0</span></div>
+            </div>
+            <div id="number-to-image" class="game-mode">
+                <div class="number-display">0</div>
+                <div class="options-container"></div>
+                <div class="score-display">Score: <span id="score">0</span></div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="scripts/app.js"></script>
+</body>
+
+</html>
