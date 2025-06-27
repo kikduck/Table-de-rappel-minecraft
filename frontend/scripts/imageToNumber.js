@@ -10,16 +10,16 @@ export class ImageToNumberMode {
         this.itemDisplay = document.querySelector('#image-to-number .item-display i');
         this.numberInput = document.getElementById('number-input');
         this.checkButton = document.getElementById('check-answer');
-        this.scoreDisplay = document.querySelector('#image-to-number .score-display #score');
+        this.scoreDisplay = document.getElementById('score-image-to-number');
         this.itemResult = document.getElementById('item-result');
 
         // Bind des événements
-        this.checkButton.addEventListener('click', () => this.checkAnswer());
-        this.numberInput.addEventListener('keypress', (e) => {
+        this.boundCheckAnswer = () => this.checkAnswer();
+        this.boundKeypress = (e) => {
             if (e.key === 'Enter') {
                 this.checkAnswer();
             }
-        });
+        };
     }
 
     start() {
@@ -27,7 +27,26 @@ export class ImageToNumberMode {
         if (this.scoreDisplay) {
             this.scoreDisplay.textContent = this.score;
         }
+
+        // Ajouter les événements
+        if (this.checkButton) {
+            this.checkButton.addEventListener('click', this.boundCheckAnswer);
+        }
+        if (this.numberInput) {
+            this.numberInput.addEventListener('keypress', this.boundKeypress);
+        }
+
         this.updateDisplay();
+    }
+
+    stop() {
+        // Nettoyer les événements
+        if (this.checkButton) {
+            this.checkButton.removeEventListener('click', this.boundCheckAnswer);
+        }
+        if (this.numberInput) {
+            this.numberInput.removeEventListener('keypress', this.boundKeypress);
+        }
     }
 
     updateDisplay() {

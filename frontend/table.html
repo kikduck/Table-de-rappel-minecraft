@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Tables - Minecraft</title>
+    <link rel="icon" type="image/x-icon" href="Book_and_Quill_JE2_BE2.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="Book_and_Quill_JE2_BE2.ico">
+    <link rel="stylesheet" href="Library/icons-minecraft-215.css">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="table-management-header">
+            <h1>Gestion des Tables de Rappel</h1>
+            <nav class="navigation">
+                <a href="index.html" class="nav-btn">Retour au Jeu</a>
+            </nav>
+        </div>
+
+        <!-- Création de nouvelle table -->
+        <div class="create-table-form">
+            <h3>Créer une nouvelle table</h3>
+            <form id="create-table-form">
+                <div class="form-group">
+                    <label for="table-name">Nom de la table :</label>
+                    <input type="text" id="table-name" placeholder="Entrez le nom de la table" required>
+                    <button type="submit">Créer</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Liste des tables -->
+        <div class="tables-list">
+            <h3>Mes tables de rappel</h3>
+            <div id="tables-grid" class="tables-grid">
+                <!-- Les cartes de tables seront ajoutées ici dynamiquement -->
+            </div>
+        </div>
+
+        <!-- Section de gestion des entrées (affichée quand une table est sélectionnée) -->
+        <div id="table-entries-section" style="display: none;">
+            <div class="table-management">
+                <h2 id="current-table-title">Gestion des entrées</h2>
+
+                <!-- Formulaire d'ajout d'entrée -->
+                <form id="add-entry-form">
+                    <div class="form-group">
+                        <label for="search-item">Rechercher un objet:</label>
+                        <input type="text" id="search-item" placeholder="Tapez pour rechercher...">
+                    </div>
+                    <div class="form-group icon-selection">
+                        <div class="icon-select-container">
+                            <label for="item-icon">Icône de l'objet:</label>
+                            <select id="item-icon" required>
+                                <option value="">Sélectionnez un objet</option>
+                                <!-- Les options seront remplies dynamiquement -->
+                            </select>
+                        </div>
+                        <div id="icon-preview" class="icon-preview"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-number">Numéro:</label>
+                        <input type="number" id="item-number" min="0" max="99" required>
+                    </div>
+                    <button type="submit">Ajouter l'entrée</button>
+                </form>
+
+                <!-- Liste des entrées -->
+                <div class="entries-list">
+                    <h3>Entrées de la table</h3>
+                    <table id="entries-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Objet</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Les entrées seront ajoutées dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="scripts/table.js"></script>
+</body>
+
+</html>

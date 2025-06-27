@@ -9,7 +9,7 @@ export class NumberToImageMode {
         // Éléments DOM
         this.numberDisplay = document.querySelector('#number-to-image .number-display');
         this.optionsContainer = document.querySelector('#number-to-image .options-container');
-        this.scoreDisplay = document.querySelector('#number-to-image .score-display #score');
+        this.scoreDisplay = document.getElementById('score-number-to-image');
         this.itemResult = document.getElementById('item-result');
     }
 
@@ -19,6 +19,16 @@ export class NumberToImageMode {
             this.scoreDisplay.textContent = this.score;
         }
         this.updateDisplay();
+    }
+
+    stop() {
+        // Nettoyer les événements des options si nécessaire
+        if (this.optionsContainer) {
+            const options = this.optionsContainer.querySelectorAll('.option-item');
+            options.forEach(option => {
+                // Les événements seront automatiquement supprimés quand on vide le conteneur
+            });
+        }
     }
 
     updateDisplay() {

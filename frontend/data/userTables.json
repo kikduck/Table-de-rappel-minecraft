@@ -1,0 +1,354 @@
+{
+  "tables": {
+    "default": {
+      "id": "default",
+      "name": "Table par défaut",
+      "entries": [
+        {
+          "number": 0,
+          "material": "wood",
+          "icon": "oak-planks",
+          "isDefault": true
+        },
+        {
+          "number": 1,
+          "material": "wood",
+          "icon": "wooden-sword",
+          "isDefault": true
+        },
+        {
+          "number": 2,
+          "material": "wood",
+          "icon": "wooden-pickaxe",
+          "isDefault": true
+        },
+        {
+          "number": 3,
+          "material": "wood",
+          "icon": "wooden-axe",
+          "isDefault": true
+        },
+        {
+          "number": 4,
+          "material": "wood",
+          "icon": "wooden-shovel",
+          "isDefault": true
+        },
+        {
+          "number": 5,
+          "material": "wood",
+          "icon": "wooden-hoe",
+          "isDefault": true
+        },
+        {
+          "number": 6,
+          "material": "wood",
+          "icon": "leather-helmet",
+          "isDefault": true
+        },
+        {
+          "number": 7,
+          "material": "wood",
+          "icon": "leather-chestplate",
+          "isDefault": true
+        },
+        {
+          "number": 8,
+          "material": "wood",
+          "icon": "leather-leggings",
+          "isDefault": true
+        },
+        {
+          "number": 9,
+          "material": "wood",
+          "icon": "leather-boots",
+          "isDefault": true
+        },
+        {
+          "number": 10,
+          "material": "stone",
+          "icon": "cobblestone",
+          "isDefault": true
+        },
+        {
+          "number": 11,
+          "material": "stone",
+          "icon": "stone-sword",
+          "isDefault": true
+        },
+        {
+          "number": 12,
+          "material": "stone",
+          "icon": "stone-pickaxe",
+          "isDefault": true
+        },
+        {
+          "number": 13,
+          "material": "stone",
+          "icon": "stone-axe",
+          "isDefault": true
+        },
+        {
+          "number": 14,
+          "material": "stone",
+          "icon": "stone-shovel",
+          "isDefault": true
+        },
+        {
+          "number": 15,
+          "material": "stone",
+          "icon": "stone-hoe",
+          "isDefault": true
+        },
+        {
+          "number": 16,
+          "material": "stone",
+          "icon": "chainmail-helmet",
+          "isDefault": true
+        },
+        {
+          "number": 17,
+          "material": "stone",
+          "icon": "chainmail-chestplate",
+          "isDefault": true
+        },
+        {
+          "number": 18,
+          "material": "stone",
+          "icon": "chainmail-leggings",
+          "isDefault": true
+        },
+        {
+          "number": 19,
+          "material": "stone",
+          "icon": "chainmail-boots",
+          "isDefault": true
+        },
+        {
+          "number": 20,
+          "material": "iron",
+          "icon": "iron-ingot",
+          "isDefault": true
+        },
+        {
+          "number": 21,
+          "material": "iron",
+          "icon": "iron-sword",
+          "isDefault": true
+        },
+        {
+          "number": 22,
+          "material": "iron",
+          "icon": "iron-pickaxe",
+          "isDefault": true
+        },
+        {
+          "number": 23,
+          "material": "iron",
+          "icon": "iron-axe",
+          "isDefault": true
+        },
+        {
+          "number": 24,
+          "material": "iron",
+          "icon": "iron-shovel",
+          "isDefault": true
+        },
+        {
+          "number": 25,
+          "material": "iron",
+          "icon": "iron-hoe",
+          "isDefault": true
+        },
+        {
+          "number": 26,
+          "material": "iron",
+          "icon": "iron-helmet",
+          "isDefault": true
+        },
+        {
+          "number": 27,
+          "material": "iron",
+          "icon": "iron-chestplate",
+          "isDefault": true
+        },
+        {
+          "number": 28,
+          "material": "iron",
+          "icon": "iron-leggings",
+          "isDefault": true
+        },
+        {
+          "number": 29,
+          "material": "iron",
+          "icon": "iron-boots",
+          "isDefault": true
+        },
+        {
+          "number": 30,
+          "material": "gold",
+          "icon": "gold-ingot",
+          "isDefault": true
+        },
+        {
+          "number": 31,
+          "material": "gold",
+          "icon": "golden-sword",
+          "isDefault": true
+        },
+        {
+          "number": 32,
+          "material": "gold",
+          "icon": "golden-pickaxe",
+          "isDefault": true
+        },
+        {
+          "number": 33,
+          "material": "gold",
+          "icon": "golden-axe",
+          "isDefault": true
+        },
+        {
+          "number": 34,
+          "material": "gold",
+          "icon": "golden-shovel",
+          "isDefault": true
+        },
+        {
+          "number": 35,
+          "material": "gold",
+          "icon": "golden-hoe",
+          "isDefault": true
+        },
+        {
+          "number": 36,
+          "material": "gold",
+          "icon": "golden-helmet",
+          "isDefault": true
+        },
+        {
+          "number": 37,
+          "material": "gold",
+          "icon": "golden-chestplate",
+          "isDefault": true
+        },
+        {
+          "number": 38,
+          "material": "gold",
+          "icon": "golden-leggings",
+          "isDefault": true
+        },
+        {
+          "number": 39,
+          "material": "gold",
+          "icon": "golden-boots",
+          "isDefault": true
+        },
+        {
+          "number": 40,
+          "material": "diamond",
+          "icon": "diamond",
+          "isDefault": true
+        },
+        {
+          "number": 41,
+          "material": "diamond",
+          "icon": "diamond-sword",
+          "isDefault": true
+        },
+        {
+          "number": 42,
+          "material": "diamond",
+          "icon": "diamond-pickaxe",
+          "isDefault": true
+        },
+        {
+          "number": 43,
+          "material": "diamond",
+          "icon": "diamond-axe",
+          "isDefault": true
+        },
+        {
+          "number": 44,
+          "material": "diamond",
+          "icon": "diamond-shovel",
+          "isDefault": true
+        },
+        {
+          "number": 45,
+          "material": "diamond",
+          "icon": "diamond-hoe",
+          "isDefault": true
+        },
+        {
+          "number": 46,
+          "material": "diamond",
+          "icon": "diamond-helmet",
+          "isDefault": true
+        },
+        {
+          "number": 47,
+          "material": "diamond",
+          "icon": "diamond-chestplate",
+          "isDefault": true
+        },
+        {
+          "number": 48,
+          "material": "diamond",
+          "icon": "diamond-leggings",
+          "isDefault": true
+        },
+        {
+          "number": 49,
+          "material": "diamond",
+          "icon": "diamond-boots",
+          "isDefault": true
+        },
+        {
+          "number": 50,
+          "icon": "redstone-block",
+          "material": "custom",
+          "isDefault": false
+        },
+        {
+          "number": 51,
+          "icon": "redstone",
+          "material": "custom",
+          "isDefault": false
+        }
+      ]
+    },
+    "1750984535825": {
+      "id": "1750984535825",
+      "name": "Table couleur",
+      "entries": [
+        {
+          "number": 0,
+          "icon": "black-wool",
+          "isDefault": false
+        },
+        {
+          "number": 1,
+          "icon": "white-wool",
+          "isDefault": false
+        },
+        {
+          "number": 2,
+          "icon": "blue-wool",
+          "isDefault": false
+        },
+        {
+          "number": 3,
+          "icon": "red-wool",
+          "isDefault": false
+        },
+        {
+          "number": 4,
+          "icon": "orange-wool",
+          "isDefault": false
+        }
+      ]
+    }
+  },
+  "currentTable": "1750984535825"
+}

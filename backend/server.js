@@ -4,21 +4,33 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
 app.use(express.json()); // Plus simple que body-parser
-app.use(express.static(path.join(__dirname, '..')));
+app.use(express.static(path.join(__dirname, '../frontend')));
 
-// Chemin vers le fichier JSON
-const dataFilePath = path.join(__dirname, '../data/userTable.json');
+// Chemin vers le fichier JSON des tables
+const dataFilePath = path.join(__dirname, '../frontend/data/userTables.json');
 
 // Fonction utilitaire pour lire/écrire le fichier JSON
 const readDataFile = () => {
     try {
         if (!fs.existsSync(dataFilePath)) {
-            return null;
+            // Créer un fichier par défaut avec une table de base
+            const defaultData = {
+                tables: {
+                    "default": {
+                        id: "default",
+                        name: "Table par défaut",
+                        entries: []
+                    }
+                },
+                currentTable: "default"
+            };
+            writeDataFile(defaultData);
+            return defaultData;
         }
         return JSON.parse(fs.readFileSync(dataFilePath, 'utf8'));
     } catch (error) {
@@ -37,95 +49,242 @@ const writeDataFile = (data) => {
     }
 };
 
-// Route pour obtenir toutes les entrées
-app.get('/api/entries', (req, res) => {
-    const entries = readDataFile();
-
-    if (!entries) {
-        return res.status(404).json({ error: 'Fichier de données non trouvé' });
+// Route pour obtenir la liste des tables
+app.get('/api/tables', (req, res) => {
+    const data = readDataFile();
+    if (!data) {
+        return res.status(500).json({ error: 'Erreur de lecture des données' });
     }
 
-    res.json(entries);
+    const tablesList = Object.values(data.tables).map(table => ({
+        id: table.id,
+        name: table.name,
+        entryCount: table.entries.length
+    }));
+
+    res.json({
+        tables: tablesList,
+        currentTable: data.currentTable
+    });
 });
 
-// Route pour ajouter ou mettre à jour une entrée
-app.post('/api/entries', (req, res) => {
+// Route pour créer une nouvelle table
+app.post('/api/tables', (req, res) => {
     try {
-        const newEntry = req.body;
+        const { name } = req.body;
 
-        // Vérification de base
-        if (!newEntry || typeof newEntry.number !== 'number' || !newEntry.icon) {
-            return res.status(400).json({ error: 'Données d\'entrée invalides' });
+        if (!name || typeof name !== 'string' || name.trim() === '') {
+            return res.status(400).json({ error: 'Nom de table invalide' });
         }
 
-        // Lire le fichier existant
-        let entries = readDataFile() || [];
-
-        // Vérifier si l'entrée existe déjà
-        const existingIndex = entries.findIndex(entry => entry.number === newEntry.number);
-
-        if (existingIndex !== -1) {
-            // Mettre à jour l'entrée existante
-            entries[existingIndex] = {
-                ...entries[existingIndex],
-                ...newEntry,
-                isDefault: false // Marquer comme personnalisé
-            };
-        } else {
-            // Ajouter une nouvelle entrée
-            entries.push({
-                ...newEntry,
-                isDefault: false
-            });
+        const data = readDataFile();
+        if (!data) {
+            return res.status(500).json({ error: 'Erreur de lecture des données' });
         }
 
-        // Trier les entrées par numéro
-        entries.sort((a, b) => a.number - b.number);
+        const tableId = Date.now().toString();
+        const tableName = name.trim();
 
-        // Écrire dans le fichier
-        if (!writeDataFile(entries)) {
+        // Vérifier si le nom existe déjà
+        const existingTable = Object.values(data.tables).find(table => table.name === tableName);
+        if (existingTable) {
+            return res.status(400).json({ error: 'Une table avec ce nom existe déjà' });
+        }
+
+        data.tables[tableId] = {
+            id: tableId,
+            name: tableName,
+            entries: []
+        };
+
+        if (!writeDataFile(data)) {
             return res.status(500).json({ error: 'Erreur lors de l\'écriture du fichier' });
         }
 
-        res.json({ success: true, entries });
+        res.json({ success: true, table: data.tables[tableId] });
     } catch (error) {
         console.error('Erreur:', error);
         res.status(500).json({ error: 'Erreur serveur' });
     }
 });
 
-// Route pour supprimer une entrée
-app.delete('/api/entries/:number', (req, res) => {
+// Route pour supprimer une table
+app.delete('/api/tables/:tableId', (req, res) => {
     try {
+        const { tableId } = req.params;
+
+        const data = readDataFile();
+        if (!data) {
+            return res.status(500).json({ error: 'Erreur de lecture des données' });
+        }
+
+        // Interdire la suppression de la table par défaut
+        if (tableId === 'default') {
+            return res.status(400).json({ error: 'Impossible de supprimer la table par défaut' });
+        }
+
+        if (!data.tables[tableId]) {
+            return res.status(404).json({ error: 'Table non trouvée' });
+        }
+
+        delete data.tables[tableId];
+
+        // Si la table supprimée était la table courante, basculer vers la table par défaut
+        if (data.currentTable === tableId) {
+            data.currentTable = 'default';
+        }
+
+        if (!writeDataFile(data)) {
+            return res.status(500).json({ error: 'Erreur lors de l\'écriture du fichier' });
+        }
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Erreur:', error);
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
+});
+
+// Route pour changer la table courante
+app.put('/api/tables/current/:tableId', (req, res) => {
+    try {
+        const { tableId } = req.params;
+
+        const data = readDataFile();
+        if (!data) {
+            return res.status(500).json({ error: 'Erreur de lecture des données' });
+        }
+
+        if (!data.tables[tableId]) {
+            return res.status(404).json({ error: 'Table non trouvée' });
+        }
+
+        data.currentTable = tableId;
+
+        if (!writeDataFile(data)) {
+            return res.status(500).json({ error: 'Erreur lors de l\'écriture du fichier' });
+        }
+
+        res.json({ success: true, currentTable: tableId });
+    } catch (error) {
+        console.error('Erreur:', error);
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
+});
+
+// Route pour obtenir les entrées de la table courante
+app.get('/api/entries', (req, res) => {
+    const data = readDataFile();
+    if (!data) {
+        return res.status(500).json({ error: 'Erreur de lecture des données' });
+    }
+
+    const currentTable = data.tables[data.currentTable];
+    if (!currentTable) {
+        return res.status(404).json({ error: 'Table courante non trouvée' });
+    }
+
+    res.json(currentTable.entries);
+});
+
+// Route pour obtenir les entrées d'une table spécifique
+app.get('/api/entries/:tableId', (req, res) => {
+    const { tableId } = req.params;
+    const data = readDataFile();
+
+    if (!data) {
+        return res.status(500).json({ error: 'Erreur de lecture des données' });
+    }
+
+    const table = data.tables[tableId];
+    if (!table) {
+        return res.status(404).json({ error: 'Table non trouvée' });
+    }
+
+    res.json(table.entries);
+});
+
+// Route pour ajouter ou mettre à jour une entrée dans une table spécifique
+app.post('/api/entries/:tableId', (req, res) => {
+    try {
+        const { tableId } = req.params;
+        const newEntry = req.body;
+
+        if (!newEntry || typeof newEntry.number !== 'number' || !newEntry.icon) {
+            return res.status(400).json({ error: 'Données d\'entrée invalides' });
+        }
+
+        const data = readDataFile();
+        if (!data) {
+            return res.status(500).json({ error: 'Erreur de lecture des données' });
+        }
+
+        const table = data.tables[tableId];
+        if (!table) {
+            return res.status(404).json({ error: 'Table non trouvée' });
+        }
+
+        const existingIndex = table.entries.findIndex(entry => entry.number === newEntry.number);
+
+        if (existingIndex !== -1) {
+            table.entries[existingIndex] = {
+                ...table.entries[existingIndex],
+                ...newEntry,
+                isDefault: false
+            };
+        } else {
+            table.entries.push({
+                ...newEntry,
+                isDefault: false
+            });
+        }
+
+        table.entries.sort((a, b) => a.number - b.number);
+
+        if (!writeDataFile(data)) {
+            return res.status(500).json({ error: 'Erreur lors de l\'écriture du fichier' });
+        }
+
+        res.json({ success: true, entries: table.entries });
+    } catch (error) {
+        console.error('Erreur:', error);
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
+});
+
+// Route pour supprimer une entrée d'une table spécifique
+app.delete('/api/entries/:tableId/:number', (req, res) => {
+    try {
+        const { tableId } = req.params;
         const entryNumber = parseInt(req.params.number);
 
         if (isNaN(entryNumber)) {
             return res.status(400).json({ error: 'Numéro d\'entrée invalide' });
         }
 
-        // Lire le fichier existant
-        const entries = readDataFile();
-
-        if (!entries) {
-            return res.status(404).json({ error: 'Fichier de données non trouvé' });
+        const data = readDataFile();
+        if (!data) {
+            return res.status(500).json({ error: 'Erreur de lecture des données' });
         }
 
-        // Trouver l'index de l'entrée à supprimer
-        const entryIndex = entries.findIndex(entry => entry.number === entryNumber);
+        const table = data.tables[tableId];
+        if (!table) {
+            return res.status(404).json({ error: 'Table non trouvée' });
+        }
+
+        const entryIndex = table.entries.findIndex(entry => entry.number === entryNumber);
 
         if (entryIndex === -1) {
             return res.status(404).json({ error: 'Entrée non trouvée' });
         }
 
-        // Supprimer l'entrée
-        entries.splice(entryIndex, 1);
+        table.entries.splice(entryIndex, 1);
 
-        // Écrire dans le fichier
-        if (!writeDataFile(entries)) {
+        if (!writeDataFile(data)) {
             return res.status(500).json({ error: 'Erreur lors de l\'écriture du fichier' });
         }
 
-        res.json({ success: true, entries });
+        res.json({ success: true, entries: table.entries });
     } catch (error) {
         console.error('Erreur:', error);
         res.status(500).json({ error: 'Erreur serveur' });
@@ -133,7 +292,7 @@ app.delete('/api/entries/:number', (req, res) => {
 });
 
 // Démarrer le serveur
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);
     console.log(`API disponible sur http://localhost:${PORT}/api/entries`);
 }); 
