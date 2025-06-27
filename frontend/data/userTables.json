@@ -351,6 +351,11 @@
           "number": 5,
           "icon": "lime-wool",
           "isDefault": false
+        },
+        {
+          "number": 7,
+          "icon": "light-gray-wool",
+          "isDefault": false
         }
       ]
     }
