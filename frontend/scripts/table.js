@@ -360,7 +360,15 @@ function setupEntryForm() {
 
         try {
             await addEntry(icon, number);
+
+            // Conserver la valeur du champ de recherche avant de réinitialiser le formulaire
+            const searchValue = document.getElementById('search-item').value;
+
             form.reset();
+
+            // Restaurer la valeur du champ de recherche
+            document.getElementById('search-item').value = searchValue;
+
             document.getElementById('icon-preview').innerHTML = '';
             document.getElementById('icon-preview').style.display = 'none';
         } catch (error) {

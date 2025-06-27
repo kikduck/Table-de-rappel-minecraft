@@ -17,7 +17,18 @@ const dataFilePath = path.join(__dirname, '../frontend/data/userTables.json');
 // Fonction utilitaire pour lire/écrire le fichier JSON
 const readDataFile = () => {
     try {
+        console.log(`Tentative de lecture du fichier: ${dataFilePath}`);
+
         if (!fs.existsSync(dataFilePath)) {
+            console.log('Fichier n\'existe pas, création du fichier par défaut...');
+
+            // Vérifier si le dossier parent existe
+            const parentDir = path.dirname(dataFilePath);
+            if (!fs.existsSync(parentDir)) {
+                console.log(`Création du dossier parent: ${parentDir}`);
+                fs.mkdirSync(parentDir, { recursive: true });
+            }
+
             // Créer un fichier par défaut avec une table de base
             const defaultData = {
                 tables: {
@@ -29,22 +40,62 @@ const readDataFile = () => {
                 },
                 currentTable: "default"
             };
-            writeDataFile(defaultData);
-            return defaultData;
+
+            if (writeDataFile(defaultData)) {
+                console.log('Fichier par défaut créé avec succès');
+                return defaultData;
+            } else {
+                console.error('Échec de la création du fichier par défaut');
+                return null;
+            }
         }
-        return JSON.parse(fs.readFileSync(dataFilePath, 'utf8'));
+
+        console.log('Lecture du fichier existant...');
+        const data = JSON.parse(fs.readFileSync(dataFilePath, 'utf8'));
+        console.log('Fichier lu avec succès');
+        return data;
     } catch (error) {
         console.error('Erreur de lecture du fichier:', error);
+        console.error('Détails de l\'erreur:', {
+            code: error.code,
+            path: error.path,
+            message: error.message
+        });
         return null;
     }
 };
 
 const writeDataFile = (data) => {
     try {
+        console.log(`Tentative d'écriture dans le fichier: ${dataFilePath}`);
+
+        // Vérifier si le dossier parent existe
+        const parentDir = path.dirname(dataFilePath);
+        if (!fs.existsSync(parentDir)) {
+            console.log(`Création du dossier parent: ${parentDir}`);
+            fs.mkdirSync(parentDir, { recursive: true });
+        }
+
         fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), 'utf8');
+        console.log('Fichier écrit avec succès');
         return true;
     } catch (error) {
         console.error('Erreur d\'écriture du fichier:', error);
+        console.error('Détails de l\'erreur:', {
+            code: error.code,
+            path: error.path,
+            message: error.message,
+            permissions: fs.constants
+        });
+
+        // Vérifications supplémentaires
+        try {
+            const stats = fs.statSync(path.dirname(dataFilePath));
+            console.log('Permissions du dossier parent:', stats.mode.toString(8));
+        } catch (statError) {
+            console.error('Erreur lors de la vérification des permissions:', statError);
+        }
+
         return false;
     }
 };
@@ -210,17 +261,25 @@ app.post('/api/entries/:tableId', (req, res) => {
         const { tableId } = req.params;
         const newEntry = req.body;
 
+        console.log(`POST /api/entries/${tableId} - Nouvelle entrée:`, newEntry);
+
         if (!newEntry || typeof newEntry.number !== 'number' || !newEntry.icon) {
+            console.error('Données d\'entrée invalides:', { newEntry, typeOfNumber: typeof newEntry.number });
             return res.status(400).json({ error: 'Données d\'entrée invalides' });
         }
 
+        console.log('Lecture des données...');
         const data = readDataFile();
         if (!data) {
+            console.error('Échec de lecture des données');
             return res.status(500).json({ error: 'Erreur de lecture des données' });
         }
 
+        console.log(`Recherche de la table ${tableId}...`);
         const table = data.tables[tableId];
         if (!table) {
+            console.error('Table non trouvée:', tableId);
+            console.log('Tables disponibles:', Object.keys(data.tables));
             return res.status(404).json({ error: 'Table non trouvée' });
         }
 
@@ -241,13 +300,17 @@ app.post('/api/entries/:tableId', (req, res) => {
 
         table.entries.sort((a, b) => a.number - b.number);
 
+        console.log('Tentative d\'écriture des données...');
         if (!writeDataFile(data)) {
+            console.error('Échec de l\'écriture du fichier');
             return res.status(500).json({ error: 'Erreur lors de l\'écriture du fichier' });
         }
 
+        console.log('Entrée ajoutée avec succès');
         res.json({ success: true, entries: table.entries });
     } catch (error) {
-        console.error('Erreur:', error);
+        console.error('Erreur dans POST /api/entries/:tableId:', error);
+        console.error('Stack trace:', error.stack);
         res.status(500).json({ error: 'Erreur serveur' });
     }
 });
