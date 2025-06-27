@@ -2,14 +2,38 @@ import { ImageToNumberMode } from './imageToNumber.js';
 import { NumberToImageMode } from './numberToImage.js';
 
 // Configuration de l'API
-// Détection automatique de l'URL de l'API
-const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:3000/api/entries'  // En développement local
-    : `${window.location.origin}/api/entries`; // Sur le serveur
+let API_BASE_URL;
 
-const API_TABLES_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:3000/api/tables'  // En développement local
-    : `${window.location.origin}/api/tables`; // Sur le serveur
+// Vérifier s'il y a une configuration forcée
+if (window.API_CONFIG && window.API_CONFIG.FORCE_API_URL) {
+    API_BASE_URL = window.API_CONFIG.FORCE_API_URL;
+}
+// Si on est en développement local
+else if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    API_BASE_URL = 'http://localhost:3000/api';
+}
+// Si on est sur un serveur et le port 3000 est dans l'URL
+else if (window.location.port === '3000') {
+    API_BASE_URL = `${window.location.origin}/api`;
+}
+// Pour les serveurs de production (Ubuntu, etc.) - on assume que le serveur backend tourne sur le port 3000
+else {
+    API_BASE_URL = `${window.location.protocol}//${window.location.hostname}:3000/api`;
+}
+
+const API_URL = `${API_BASE_URL}/entries`;
+const API_TABLES_URL = `${API_BASE_URL}/tables`;
+
+if (window.API_CONFIG && window.API_CONFIG.DEBUG) {
+    console.log('Configuration API:', {
+        hostname: window.location.hostname,
+        port: window.location.port,
+        API_BASE_URL,
+        API_URL,
+        API_TABLES_URL,
+        forced: !!(window.API_CONFIG && window.API_CONFIG.FORCE_API_URL)
+    });
+}
 
 // Éléments DOM
 const modeButtons = document.querySelectorAll('.mode-btn');

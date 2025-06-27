@@ -346,6 +346,11 @@
           "number": 4,
           "icon": "orange-wool",
           "isDefault": false
+        },
+        {
+          "number": 5,
+          "icon": "lime-wool",
+          "isDefault": false
         }
       ]
     }
