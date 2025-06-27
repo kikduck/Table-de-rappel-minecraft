@@ -6,37 +6,10 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configuration CORS plus permissive pour le serveur Ubuntu
-const corsOptions = {
-    origin: function (origin, callback) {
-        // Permettre les requêtes sans origin (comme les apps mobiles ou Postman)
-        if (!origin) return callback(null, true);
-        // Permettre toutes les origines en développement
-        if (process.env.NODE_ENV !== 'production') {
-            return callback(null, true);
-        }
-        // En production, vous pouvez spécifier vos domaines autorisés
-        callback(null, true);
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-};
-
 // Middleware
-app.use(cors(corsOptions));
-app.use(express.json({ limit: '10mb' })); // Augmenter la taille limite pour les gros payloads
+app.use(cors());
+app.use(express.json()); // Plus simple que body-parser
 app.use(express.static(path.join(__dirname, '../frontend')));
-
-// Middleware de logging pour diagnostiquer les problèmes
-app.use((req, res, next) => {
-    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`, {
-        origin: req.get('Origin'),
-        userAgent: req.get('User-Agent'),
-        ip: req.ip
-    });
-    next();
-});
 
 // Chemin vers le fichier JSON des tables
 const dataFilePath = path.join(__dirname, '../frontend/data/userTables.json');
